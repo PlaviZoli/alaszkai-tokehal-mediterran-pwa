@@ -42,31 +42,30 @@ function mixed(n){
   const frac={0:'',1:'⅙',2:'⅓',3:'½',4:'⅔',5:'⅚'}[f]||'';
   return (whole?whole:'')+frac || '0';
 }
-function kitchen(x){
+function kitchen(x,factor=1){
   if(x.kq==null)return '';
-  const q=scale(x.kq), val=(Math.abs(q-Math.round(q*6)/6)<.03)?mixed(q):dec(q);
-  if(x.id==='lemon') return `${val} ${x.ku}`;
+  const q=scale(x.kq)*factor, val=(Math.abs(q-Math.round(q*6)/6)<.03)?mixed(q):dec(q);
   return `${val} ${x.ku}`;
 }
-function amount(x){
+function amount(x,factor=1){
   if(x.text)return x.text;
-  const g=scale(x.g), k=kitchen(x);
+  const g=scale(x.g)*factor, k=kitchen(x,factor);
   if(x.id==='lemon') return `${k} (kb. ${dec(g)} g lé)`;
   if(k&&g!=null) return `${k} (${dec(g)} g)`;
   if(g!=null) return `${dec(g)} g`;
   return '';
 }
-function A(id){return amount(item(id))}
+function A(id,factor=1){return amount(item(id),factor)}
 
 function getSteps(){
   const perBulgur=dec(scale(item('bulgur').g)/servings);
   return [
     ['1. Kiolvasztás és szárítás',`A ${A('fish')} alaszkai tőkehalfilét lehetőleg hűtőben olvaszd ki, majd papírtörlővel nagyon alaposan itasd le. Ha a darabok nagyon eltérő vastagságúak, a nagyobbakat vágd ketté.`,`A nedves hal felhígítja a paradicsomos alapot, ezért ez az egyik legfontosabb előkészítő lépés.`],
     ['2. Sütő és zöldségek',`Melegítsd elő a sütőt 200 °C-ra alsó-felső sütésen (185 °C légkeverés). Készíts elő ${A('tomato')} paradicsomot, ${A('paprika')} paprikát és ${A('onion')} hagymát. A paradicsomot darabold, a paprikát kb. 2 cm-esre, a hagymát vékony cikkekre vágd.`,`Kb. 30 × 22 cm-es sütőtál ehhez a mennyiséghez jól használható.`],
-    ['3. Mediterrán alap',`A sütőtálban keverd össze a ${A('tomato')} paradicsomot, a ${A('paprika')} paprikát és a ${A('onion')} hagymát ${A('oil')} olívaolajjal, ${A('oregano')} oregánóval, ${A('pepper')} fekete borssal és a ${A('salt')} só körülbelül felével. Ha használod, itt add hozzá a ${A('paprikapowder')} édes vagy füstölt paprikát is.`,`Az olívabogyó és a kapribogyó is sós, ezért az elején inkább kevesebbet sózz.`],
+    ['3. Mediterrán alap',`A sütőtálban keverd össze a ${A('tomato')} paradicsomot, a ${A('paprika')} paprikát és a ${A('onion')} hagymát ${A('oil')} olívaolajjal, ${A('oregano')} oregánóval, ${A('pepper')} fekete borssal és ${A('salt',.5)} sóval. Ha használod, itt add hozzá a ${A('paprikapowder')} édes vagy füstölt paprikát is.`,`Az olívabogyó és a kapribogyó is sós, ezért az elején inkább kevesebbet sózz.`],
     ['4. Elősütés hal nélkül',`Süsd a zöldségalapot fedetlenül 15–18 percig. A paradicsom essen össze, a hagyma puhuljon, a lé pedig kezdjen koncentrálódni.`,`A zöldségeknek több idő kell, mint a halnak; ezért nem egyszerre kezdjük a sütést.`],
     ['5. Fokhagyma, olíva, kóstolás',`Vedd ki a tálat. Add hozzá a ${A('garlic')} fokhagymát és a ${A('olive')} olívabogyót. Ha használod, most add hozzá a ${A('capers')} kapribogyót is. Keverd át, majd kóstold meg. Ha túl híg, süsd még 3–5 percig hal nélkül.`,`Ha a paradicsom túl savas, egy nagyon kis csipet cukor kerekítheti az ízt.`],
-    ['6. Hal behelyezése',`A ${A('fish')} halfilét fektesd a zöldséges alap tetejére. Használd el rajta a ${A('salt')} só másik felét, majd kanalazz a halra kevés paradicsomos szaftot, és facsarj rá ${A('lemon')} citromlevet.`,`Ne pácolj hosszan citromlében: a finom hús szerkezetét feleslegesen megváltoztatná.`],
+    ['6. Hal behelyezése',`A ${A('fish')} halfilét fektesd a zöldséges alap tetejére. Sózd meg a maradék ${A('salt',.5)} sóval, majd kanalazz a halra kevés paradicsomos szaftot, és facsarj rá ${A('lemon')} citromlevet.`,`Ne pácolj hosszan citromlében: a finom hús szerkezetét feleslegesen megváltoztatná.`],
     ['7. A hal sütése',`Süsd 200 °C-on, fedetlenül. Vékony filé: 8–10 perc; közepes: 10–12 perc; vastagabb: 12–15 perc.`,`A hal akkor jó, ha opálos-fehér, villával könnyen lemezekre válik, de még szaftos. Biztonságos célhőmérséklet: 63 °C.`],
     ['8. Befejezés',`Vedd ki a sütőből, és pihentesd 2–3 percig. Ha használod, szórd meg ${A('parsley')} friss petrezselyemmel vagy bazsalikommal, adj hozzá kevés reszelt citromhéjat, és szükség szerint néhány csepp friss citromlevet.`,`Ha lapos az íz, először savval korrigálj, és csak utána további sóval.`],
     ['9. Tálalás',`Tálald nagy adag salátával vagy készíts mellé ${A('bulgur')} száraz bulgurból köretet, ami körülbelül ${perBulgur} g/fő.`,`A bulgur jól felszívja a paradicsomos–olívás szaftot.`]
